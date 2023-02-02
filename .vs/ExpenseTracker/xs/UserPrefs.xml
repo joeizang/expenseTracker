@@ -1,0 +1,20 @@
+﻿<Properties StartupConfiguration="{93C00FEB-9E4D-476B-A1EB-C5ED1D18B79C}|https">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.Workbench>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="ExpenseTracker" expanded="True">
+            <Node name="ExpenseTrackerApi" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.ExpenseTrackerApi FirstBuild="True" PreferredExecutionTarget="/Applications/Google Chrome.app" />
+</Properties>
