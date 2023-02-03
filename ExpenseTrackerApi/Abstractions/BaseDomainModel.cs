@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace ExpenseTrackerApi.Abstractions;
 
 public class BaseDomainModel
@@ -9,6 +11,9 @@ public class BaseDomainModel
     public DateTime UpdatedAt { get; set; }
     
     public DateTime? DeletedAt { get; set; }
+
+    [Timestamp]
+    public uint Version { get; set; }
     
     public bool IsDeleted { get; set; }
     

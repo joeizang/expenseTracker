@@ -10,8 +10,8 @@ public static class ExpenseEndpointGroup
 
         expenseGroup.MapGet("/", async () =>
         {
-            
-        })
+
+        });
     }
     
 }
