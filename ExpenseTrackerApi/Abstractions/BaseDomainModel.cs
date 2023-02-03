@@ -18,4 +18,11 @@ public class BaseDomainModel
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
     }
+
+    public BaseDomainModel(bool isEmpty)
+    {
+        Id = Guid.Empty;
+        CreatedAt = DateTime.MinValue;
+        UpdatedAt = DateTime.MinValue;
+    }
 }

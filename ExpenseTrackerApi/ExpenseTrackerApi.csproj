@@ -33,7 +33,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ApiModels" />
-    <Folder Include="EndPoints" />
+    <Folder Include="Data\DataServices" />
+    <Folder Include="Validators" />
   </ItemGroup>
 
 </Project>
