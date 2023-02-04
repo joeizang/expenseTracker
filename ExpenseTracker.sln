@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerApi", "ExpenseTrackerApi\ExpenseTrackerApi.csproj", "{93C00FEB-9E4D-476B-A1EB-C5ED1D18B79C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerTests", "ExpenseTrackerTests\ExpenseTrackerTests.csproj", "{32482F6F-E77B-4C18-915A-74C99E3AB248}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,5 +15,9 @@ Global
 		{93C00FEB-9E4D-476B-A1EB-C5ED1D18B79C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93C00FEB-9E4D-476B-A1EB-C5ED1D18B79C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93C00FEB-9E4D-476B-A1EB-C5ED1D18B79C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32482F6F-E77B-4C18-915A-74C99E3AB248}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32482F6F-E77B-4C18-915A-74C99E3AB248}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32482F6F-E77B-4C18-915A-74C99E3AB248}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32482F6F-E77B-4C18-915A-74C99E3AB248}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
