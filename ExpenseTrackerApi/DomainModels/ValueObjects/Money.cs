@@ -2,10 +2,10 @@ namespace ExpenseTrackerApi.DomainModels.ValueObjects;
 
 public record Money
 {
-    public Money(decimal Amount, Currency Currency)
+    public Money(decimal amount, Currency currency)
     {
-        Amount = Amount != decimal.MinValue && Amount != decimal.MaxValue ? Amount : 0;
-        Currency = Currency ?? new Currency("NGN", "Nigerian Naira", "₦");
+        Amount = amount != decimal.MinValue && Amount != decimal.MaxValue ? Amount : 0;
+        Currency = currency ?? new Currency("NGN", "Nigerian Naira", "₦");
     }
 
     public Money()

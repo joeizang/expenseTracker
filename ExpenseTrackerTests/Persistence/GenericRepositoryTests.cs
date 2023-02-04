@@ -129,4 +129,74 @@ public class GenericRepositoryTests
         Assert.Equal(updatedExpenseTypeFromDb.Name, expenseTypeFromDb.Name);
         Assert.NotEqual(updatedExpenseTypeFromDb.Description, expenseTypeFromDb.Description);
     }
+
+    [Fact]
+    public async Task CanGetExpensesByDate()
+    {
+            var options = new DbContextOptionsBuilder<ExpenseTrackerContext>()
+            .UseInMemoryDatabase(databaseName: "ExpenseTracker")
+            .Options;
+
+        await using var context = new ExpenseTrackerContext(options);
+        var repository = new GenericDataRepository<Expense>(context);
+
+        var expense = new Expense
+        {
+            Description = "Groceries from Sundays Shop",
+            Amount = new Money(10000, new Currency("NGN", "Naira", "₦")),
+            ExpenseDate = DateTime.Now.AddDays(-15),
+        };
+        expense.AddExpenseType(new ExpenseType
+        {
+            Name = "Groceries",
+            Description = "Groceries from Sundays Shop"
+        });
+        var expense1 = new Expense
+        {
+            Description = "AlgoExpert.io Subscription",
+            Amount = new Money(100, new Currency("USD", "Dollars", "$")),
+            ExpenseDate = DateTime.Now.AddMonths(-1),
+        };
+        expense1.AddExpenseType(new ExpenseType
+        {
+            Name = "Subscription",
+            Description = "Online Subscription"
+        });
+
+        await repository.AddAsync(expense);
+        await repository.AddAsync(expense1);
+        var expenseFromDb = await repository
+            .GetByDateAsync<ExpenseApiModel>(expense.CreatedAt);
+
+        Assert.IsAssignableFrom<IEnumerable<ExpenseApiModel>>(expenseFromDb);
+        Assert.Single(expenseFromDb);
+    }
+
+    [Fact]
+    public async Task DeleteExpenseType()
+    {
+        var options = new DbContextOptionsBuilder<ExpenseTrackerContext>()
+            .UseInMemoryDatabase(databaseName: "ExpenseTracker")
+            .Options;
+
+        await using var context = new ExpenseTrackerContext(options);
+        var repository = new GenericDataRepository<ExpenseType>(context);
+
+        var expenseType = new ExpenseType
+        {
+            Name = "Groceries",
+            Description = "Groceries from Sundays Shop"
+        };
+
+        await repository.AddAsync(expenseType);
+
+        var expenseTypeFromDb = await repository.GetAsync<ExpenseTypeApiModel>(expenseType.Id);
+
+        Assert.IsType<ExpenseTypeApiModel>(expenseTypeFromDb);
+        Assert.Equal(expenseTypeFromDb.Name, expenseType.Name);
+
+        var deletedExpenseTypeFromDb = await repository.DeleteAsync<ExpenseApiModel>(
+            expenseTypeFromDb.Adapt<ExpenseType>());
+        Assert.True(deletedExpenseTypeFromDb);
+    }
 }

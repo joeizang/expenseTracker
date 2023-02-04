@@ -30,7 +30,7 @@ public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
         where TResult : class, new()
     {
         var queryable = await _dbSet.AsNoTracking().Where(x => 
-                x.CreatedAt.Equals(date) || x.UpdatedAt.Equals(date))
+                x.CreatedAt.Equals(date))
             .ProjectToType<TResult>().ToListAsync(cancellationToken).ConfigureAwait(false);
         return queryable;
     }
@@ -81,7 +81,11 @@ public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
     public async Task<bool> DeleteAsync<TResult>(T entity, CancellationToken cancellationToken = default)
         where TResult : class, new()
     {
-        var result = await this.UpdateAsync<TResult>(entity, cancellationToken).ConfigureAwait(false);
+        entity.IsDeleted = true;
+        // _context.Entry(entity).State = EntityState.Modified;
+        // return await _context.SaveChangesAsync(cancellationToken)
+        //     .ConfigureAwait(false) > 0;
+        var result = await UpdateAsync<TResult>(entity, cancellationToken).ConfigureAwait(false);
         return result != null;
     }
 }
