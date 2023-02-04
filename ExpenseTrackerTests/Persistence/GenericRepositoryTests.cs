@@ -65,6 +65,37 @@ public class GenericRepositoryTests
     }
 
     [Fact]
+    public async Task CanAddExpenseAndPayWithDollars()
+    {
+            var options = new DbContextOptionsBuilder<ExpenseTrackerContext>()
+            .UseInMemoryDatabase(databaseName: "ExpenseTracker")
+            .Options;
+
+        await using var context = new ExpenseTrackerContext(options);
+        var repository = new GenericDataRepository<Expense>(context);
+
+        var expense = new Expense
+        {
+            Description = "AlgoExpert.io Subscription",
+            Amount = new Money(100, new Currency("USD", "Dollars", "$")),
+            ExpenseDate = DateTime.Now,
+        };
+        expense.AddExpenseType(new ExpenseType
+        {
+            Name = "Subscription",
+            Description = "Online Subscription"
+        });
+
+        await repository.AddAsync(expense);
+
+        var expenseFromDb = await repository.GetAsync<ExpenseApiModel>(expense.Id);
+
+        Assert.IsType<ExpenseApiModel>(expenseFromDb);
+        Assert.Equal("USD", expenseFromDb.Amount.Currency.Code);
+        Assert.Equal(expenseFromDb.Description, expense.Description);
+    }
+
+    [Fact]
     public async Task CanUpdateExpenseType()
     {
         var options = new DbContextOptionsBuilder<ExpenseTrackerContext>()

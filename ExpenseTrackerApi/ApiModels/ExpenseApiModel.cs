@@ -8,5 +8,5 @@ public class ExpenseApiModel
     
     public string Description { get; set; } = string.Empty;
     
-    public MoneyDto Amount { get; set; } = new();
+    public Money Amount { get; set; }
 }
