@@ -44,7 +44,7 @@ public class ExpenseRepositoryTests
         
         var result = await repository.GetManyByDescriptionAsync("Test Expense");
         Assert.IsAssignableFrom<IEnumerable<ExpenseApiModel>>(result);
-        Assert.NotEqual(0, result.Count());
+        Assert.NotEmtpy(result);
     }
     
     [Fact]
@@ -82,6 +82,6 @@ public class ExpenseRepositoryTests
         
         var result = await repository.GetManyByDateAsync(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1));
         Assert.IsAssignableFrom<IEnumerable<ExpenseApiModel>>(result);
-        Assert.NotEqual(0, result.Count());
+        Assert.NotEmtpy(result);
     }
 }
