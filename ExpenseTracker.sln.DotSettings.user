@@ -2,5 +2,7 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=180132ac_002Ddd23_002D455e_002Db4cc_002Dc6a610eb9b6b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CanAddExpenseType" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::32482F6F-E77B-4C18-915A-74C99E3AB248::net7.0::ExpenseTrackerTests.Persistence.GenericRepositoryTests.CanAddExpenseType&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::32482F6F-E77B-4C18-915A-74C99E3AB248::net7.0::ExpenseTrackerTests.Persistence.GenericRepositoryTests.CanUpdateExpenseType&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::32482F6F-E77B-4C18-915A-74C99E3AB248::net7.0::ExpenseTrackerTests.Persistence.GenericRepositoryTests.CanAddExpense&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
