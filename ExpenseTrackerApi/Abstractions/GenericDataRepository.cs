@@ -82,9 +82,6 @@ public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
         where TResult : class, new()
     {
         entity.IsDeleted = true;
-        // _context.Entry(entity).State = EntityState.Modified;
-        // return await _context.SaveChangesAsync(cancellationToken)
-        //     .ConfigureAwait(false) > 0;
         var result = await UpdateAsync<TResult>(entity, cancellationToken).ConfigureAwait(false);
         return result != null;
     }
