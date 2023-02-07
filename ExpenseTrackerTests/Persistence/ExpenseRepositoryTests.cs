@@ -18,22 +18,16 @@ public class ExpenseRepositoryTests
         var context = new ExpenseTrackerContext(options);
         var repository = new ExpenseRepository(context);
         var expense = new Expense
-        {
-            Description = "Test Expense",
-            Amount = new Money(1000, new Currency("NGN", "Naira", "₦")),
-            ExpenseDate = DateTime.Now,
-        };
+        ("Test Expense", new Money(1000, new Currency("NGN", "Naira", "₦")),
+            DateTime.Now);
         expense.AddExpenseType(new ExpenseType
         {
             Name = "Test Expense Type",
             Description = "Test Expense Type Description"
         });
         var expense1 = new Expense
-        {
-            Description = "Test Expense",
-            Amount = new Money(2000, new Currency("NGN", "Naira", "₦")),
-            ExpenseDate = DateTime.Now,
-        };
+        ("Test Expense", new Money(2000, new Currency("NGN", "Naira", "₦")), 
+            DateTime.Now);
         expense1.AddExpenseType(new ExpenseType
         {
             Name = "Test Expense Type",
@@ -56,22 +50,16 @@ public class ExpenseRepositoryTests
         var context = new ExpenseTrackerContext(options);
         var repository = new ExpenseRepository(context);
         var expense = new Expense
-        {
-            Description = "Test Expense",
-            Amount = new Money(1000, new Currency("NGN", "Naira", "₦")),
-            ExpenseDate = DateTime.Now,
-        };
+        ("Test Expense", new Money(1000, new Currency("NGN", "Naira", "₦")), 
+            DateTime.Now);
         expense.AddExpenseType(new ExpenseType
         {
             Name = "Test Expense Type",
             Description = "Test Expense Type Description"
         });
         var expense1 = new Expense
-        {
-            Description = "Test Expense",
-            Amount = new Money(2000, new Currency("NGN", "Naira", "₦")),
-            ExpenseDate = DateTime.Now,
-        };
+        ("Test Expense", new Money(2000, new Currency("NGN", "Naira", "₦")),
+            DateTime.Now);
         expense1.AddExpenseType(new ExpenseType
         {
             Name = "Test Expense Type",
