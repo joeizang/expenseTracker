@@ -1,5 +1,7 @@
 using ExpenseTrackerApi.Abstractions;
+using ExpenseTrackerApi.ApiModels;
 using ExpenseTrackerApi.DomainModels.ValueObjects;
+using Mapster;
 
 namespace ExpenseTrackerApi.DomainModels;
 
@@ -15,7 +17,8 @@ public class Expense : BaseDomainModel
     public Expense(string description, Money amount, DateTime expenseDate) : this()
     {
         Description = description;
-        Amount = amount;
+        Amount = amount ?? new Money(0m, 
+            new Currency("NGN", "Nigerian Naira", "₦"));;
         ExpenseDate = expenseDate;
     }
     
@@ -27,9 +30,8 @@ public class Expense : BaseDomainModel
     public DateTime ExpenseDate { get; set; }
     
     public string Description { get; set; } = string.Empty;
-    
-    public Money Amount { get; set; } = new Money(0m, 
-        new Currency("NGN", "Nigerian Naira", "₦"));
+
+    public Money Amount { get; set; } = default!;
 
     public IEnumerable<ExpenseType> ExpenseTypes => _expenseTypes;
     

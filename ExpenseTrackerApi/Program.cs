@@ -1,6 +1,7 @@
 ﻿using ExpenseTrackerApi.Abstractions;
 using ExpenseTrackerApi.Data;
 using ExpenseTrackerApi.EndPoints;
+using ExpenseTrackerApi.ObjectMappingConfig;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddDbContext<ExpenseTrackerContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("RemotePgsql"));
 });
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericDataRepository<>));
+builder.Services.RegisterTypeConfiguration();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

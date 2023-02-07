@@ -21,5 +21,8 @@ public class AddExpenseValidator : AbstractValidator<AddExpenseModel>
             .NotEmpty()
             .MinimumLength(3)
             .WithMessage("Every expense must have a currency");
+        RuleFor(x => x.ExpenseTypes)
+            .NotEmpty()
+            .WithMessage("Every expense must have at least one expense type");
     }
 }
