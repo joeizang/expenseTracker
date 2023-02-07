@@ -38,7 +38,10 @@ public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
     public async Task<IEnumerable<TResult>> GetAllAsync<TResult>(int pageNumber = 1, int pageSize = 10,
         CancellationToken cancellationToken = default) where TResult : class, new()
     {
-        var queryable = _dbSet.AsNoTracking().Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        var queryable = _dbSet.AsNoTracking()
+            .OrderBy(x => x.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize);
         var projected = queryable.ProjectToType<TResult>();
         var result = await projected.ToListAsync(cancellationToken)
             .ConfigureAwait(false);

@@ -17,8 +17,9 @@ public class AddExpenseValidator : AbstractValidator<AddExpenseModel>
         RuleFor(x => x.Amount)
             .GreaterThan(0)
             .WithMessage("Every expense must have a positive amount");
-        RuleFor(x => x.Amount)
+        RuleFor(x => x.Currency)
             .NotEmpty()
+            .MinimumLength(3)
             .WithMessage("Every expense must have a currency");
     }
 }
