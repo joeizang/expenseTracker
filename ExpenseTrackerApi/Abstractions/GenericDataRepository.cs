@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTrackerApi.Abstractions;
 
-public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel, new()
+public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
 {
     private readonly DbSet<T> _dbSet;
     private readonly ExpenseTrackerContext _context;

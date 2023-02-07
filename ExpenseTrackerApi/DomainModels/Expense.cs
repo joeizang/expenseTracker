@@ -9,7 +9,7 @@ public class Expense : BaseDomainModel
 {
     private List<ExpenseType> _expenseTypes;
     
-    public Expense()
+    private Expense()
     {
         _expenseTypes = new List<ExpenseType>();
     }
@@ -17,21 +17,15 @@ public class Expense : BaseDomainModel
     public Expense(string description, Money amount, DateTime expenseDate) : this()
     {
         Description = description;
-        Amount = amount ?? new Money(0m, 
-            new Currency("NGN", "Nigerian Naira", "₦"));;
+        Amount = amount;
         ExpenseDate = expenseDate;
     }
     
-    public Expense(string description, DateTime expenseDate) : this()
-    {
-        Description = description;
-        ExpenseDate = expenseDate;
-    }
     public DateTime ExpenseDate { get; set; }
     
     public string Description { get; set; } = string.Empty;
 
-    public Money Amount { get; set; } = default!;
+    public Money Amount { get; set; }
 
     public IEnumerable<ExpenseType> ExpenseTypes => _expenseTypes;
     
