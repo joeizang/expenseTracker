@@ -1,4 +1,4 @@
-namespace ExpenseTrackerApi.DomainModels;
+namespace ExpenseTrackerApi.DomainModels.ValueObjects;
 
 public record Currency
 {

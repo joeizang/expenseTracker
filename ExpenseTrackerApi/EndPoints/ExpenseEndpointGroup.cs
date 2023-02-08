@@ -24,7 +24,6 @@ public static class ExpenseEndpointGroup
         expenseGroup.MapPost("/expense", async ([FromBody] AddExpenseModel model, 
             IRepository<Expense> repo) =>
         {
-            var entity = model.Adapt<Expense>();
             var expenseTypes = model.ExpenseTypes.Adapt<List<ExpenseType>>();
             var currency = model.Currency switch
             {
@@ -33,7 +32,7 @@ public static class ExpenseEndpointGroup
                 "GBP" => new Currency("GBP", "British Pound", "£"),
                 _ => new Currency("NGN", "Nigerian Naira", "₦")
             };
-            entity.Amount = new Money(model.Amount, currency);
+            var entity = new Expense(model.Description, new Money(model.Amount, currency), model.ExpenseDate);
             foreach (var expenseType in expenseTypes)  
             {
                 entity.AddExpenseType(expenseType);

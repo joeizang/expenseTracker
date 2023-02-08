@@ -25,7 +25,7 @@ public class Expense : BaseDomainModel
     
     public string Description { get; set; } = string.Empty;
 
-    public Money Amount { get; set; }
+    public Money Amount { get; }
 
     public IEnumerable<ExpenseType> ExpenseTypes => _expenseTypes;
     
@@ -44,7 +44,6 @@ public class Expense : BaseDomainModel
         if(Id != Guid.Empty) return false; // Expense has been saved. You can only cancel unsaved expenses.
         _expenseTypes.Clear();
         Description = string.Empty;
-        Amount = new Money(0m, new Currency("NGN", "Nigerian Naira", "₦"));
         ExpenseDate = default;
         return true;
     }

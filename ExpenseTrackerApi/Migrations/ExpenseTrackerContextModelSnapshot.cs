@@ -56,7 +56,7 @@ namespace ExpenseTrackerApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("Expenses", (string)null);
                 });
 
             modelBuilder.Entity("ExpenseTrackerApi.DomainModels.ExpenseType", b =>
@@ -99,12 +99,12 @@ namespace ExpenseTrackerApi.Migrations
 
                     b.HasIndex("ExpenseId");
 
-                    b.ToTable("ExpenseTypes");
+                    b.ToTable("ExpenseTypes", (string)null);
                 });
 
             modelBuilder.Entity("ExpenseTrackerApi.DomainModels.Expense", b =>
                 {
-                    b.OwnsOne("ExpenseTrackerApi.DomainModels.ValueObjects.Money", "Amount", b1 =>
+                    b.OwnsOne("ExpenseTrackerApi.DomainModels.Expense.Amount#ExpenseTrackerApi.DomainModels.ValueObjects.Money", "Amount", b1 =>
                         {
                             b1.Property<Guid>("ExpenseId")
                                 .HasColumnType("uuid");
@@ -115,12 +115,12 @@ namespace ExpenseTrackerApi.Migrations
 
                             b1.HasKey("ExpenseId");
 
-                            b1.ToTable("Expenses");
+                            b1.ToTable("Expenses", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ExpenseId");
 
-                            b1.OwnsOne("ExpenseTrackerApi.DomainModels.Currency", "Currency", b2 =>
+                            b1.OwnsOne("ExpenseTrackerApi.DomainModels.Expense.Amount#ExpenseTrackerApi.DomainModels.ValueObjects.Money.Currency#ExpenseTrackerApi.DomainModels.Currency", "Currency", b2 =>
                                 {
                                     b2.Property<Guid>("MoneyExpenseId")
                                         .HasColumnType("uuid");
@@ -142,7 +142,7 @@ namespace ExpenseTrackerApi.Migrations
 
                                     b2.HasKey("MoneyExpenseId");
 
-                                    b2.ToTable("Expenses");
+                                    b2.ToTable("Expenses", (string)null);
 
                                     b2.WithOwner()
                                         .HasForeignKey("MoneyExpenseId");
