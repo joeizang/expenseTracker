@@ -27,11 +27,11 @@ public class ExpenseRepository : GenericDataRepository<Expense>, IExpenseReposit
         return result;
     }
 
-    public async Task<IEnumerable<ExpenseApiModel>> GetManyByDateAsync(DateTime startDate, DateTime endDate, 
+    public async Task<IEnumerable<ExpenseApiModel>> GetManyByDateAsync(GetExpenseByDateModel model, 
         CancellationToken cancellationToken = default)
     {
-        var queryable = _context.Expenses.AsNoTracking().Where(x => x.ExpenseDate >= startDate && 
-                                                                    x.ExpenseDate <= endDate);
+        var queryable = _context.Expenses.AsNoTracking().Where(x => x.ExpenseDate >= model.StartDate && 
+                                                                    x.ExpenseDate <= model.EndDate);
         var projected = queryable.ProjectToType<ExpenseApiModel>();
         var result = await projected.ToListAsync(cancellationToken).ConfigureAwait(false);
         return result;

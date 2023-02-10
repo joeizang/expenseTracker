@@ -67,8 +67,12 @@ public class ExpenseRepositoryTests
         });
         await repository.AddAsync(expense);
         await repository.AddAsync(expense1);
-        
-        var result = await repository.GetManyByDateAsync(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1));
+        var model = new GetExpenseByDateModel
+        {
+            EndDate = DateTime.Now.AddDays(1),
+            StartDate = DateTime.Now.AddDays(-1)
+        };
+        var result = await repository.GetManyByDateAsync(model);
         Assert.IsAssignableFrom<IEnumerable<ExpenseApiModel>>(result);
         Assert.NotEmpty(result);
     }

@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace ExpenseTrackerApi.ApiModels;
 
 public class AddExpenseModel
@@ -15,4 +17,11 @@ public class AddExpenseModel
     public string Currency { get; set; } = string.Empty;
     
     public List<ExpenseTypeApiModel> ExpenseTypes { get; set; }
+}
+
+public class GetExpenseByDateModel
+{
+    public DateTime StartDate { get; set; }
+    
+    public DateTime EndDate { get; set; }
 }
