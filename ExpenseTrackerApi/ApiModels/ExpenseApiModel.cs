@@ -9,4 +9,6 @@ public class ExpenseApiModel
     public string Description { get; set; } = string.Empty;
     
     public Money Amount { get; set; }
+
+    public Guid? Id { get; set; }
 }

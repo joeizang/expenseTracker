@@ -25,3 +25,22 @@ public class GetExpenseByDateModel
     
     public DateTime EndDate { get; set; }
 }
+
+public class UpdateExpenseModel
+{
+    public UpdateExpenseModel()
+    {
+        ExpenseTypes = new List<ExpenseTypeApiModel>();
+    }
+    public Guid Id { get; set; }
+    
+    public DateTime ExpenseDate { get; set; }
+    
+    public string Description { get; set; } = string.Empty;
+    
+    public decimal Amount { get; set; }
+    
+    public string Currency { get; set; } = string.Empty;
+    
+    public List<ExpenseTypeApiModel> ExpenseTypes { get; set; }
+}

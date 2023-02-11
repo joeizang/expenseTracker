@@ -7,7 +7,7 @@ namespace ExpenseTrackerApi.Abstractions;
 public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
 {
     private readonly DbSet<T> _dbSet;
-    private readonly ExpenseTrackerContext _context;
+    private protected readonly ExpenseTrackerContext _context;
     
     public GenericDataRepository(ExpenseTrackerContext context)
     {
@@ -19,7 +19,10 @@ public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
         where TResult : class, new()
     {
         var queryable = _dbSet.AsNoTracking().Where(x => x.Id.Equals(id));
-        var projected = queryable.ProjectToType<TResult>();
+        var projected = queryable.ProjectToType<TResult>(new TypeAdapterConfig()
+        {
+            
+        });
         var result = await projected.SingleOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false) ?? new TResult();
         return result;  

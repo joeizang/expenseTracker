@@ -20,6 +20,12 @@ public class Expense : BaseDomainModel
         Amount = amount;
         ExpenseDate = expenseDate;
     }
+
+    public Expense(Guid id)
+    {
+        Id = id;
+        _expenseTypes = new List<ExpenseType>();
+    }
     
     public DateTime ExpenseDate { get; set; }
     
@@ -33,6 +39,7 @@ public class Expense : BaseDomainModel
     {
         _expenseTypes.Add(expenseType);
     }
+
     
     public void RemoveExpenseType(ExpenseType expenseType)
     {

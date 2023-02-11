@@ -15,7 +15,9 @@ public static class RegisterMapsterTypeConfigs
         TypeAdapterConfig<ExpenseTypeApiModel, ExpenseType>.NewConfig()
             .Map(dest => dest.Id, src => src.ExpenseTypeId)
             .Map(dest => dest.Name, src => src.Name)
-            .Map(dest => dest.Description, src => src.Description);
+            .Map(dest => dest.Description, src => src.Description)
+            .TwoWays()
+            .Map(dest => dest.Id, src => src.ExpenseTypeId);
 
         TypeAdapterConfig.GlobalSettings.Scan(typeof(RegisterMapsterTypeConfigs).Assembly);
     }
