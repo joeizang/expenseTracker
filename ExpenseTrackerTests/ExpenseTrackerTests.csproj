@@ -33,10 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Endpoints" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ExpenseTrackerApi\ExpenseTrackerApi.csproj" />
   </ItemGroup>
 
