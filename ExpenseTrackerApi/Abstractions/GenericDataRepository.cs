@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTrackerApi.Abstractions;
 
-public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel, new()
+public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
 {
     private readonly DbSet<T> _dbSet;
-    private readonly ExpenseTrackerContext _context;
+    private protected readonly ExpenseTrackerContext _context;
     
     public GenericDataRepository(ExpenseTrackerContext context)
     {
@@ -19,7 +19,10 @@ public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
         where TResult : class, new()
     {
         var queryable = _dbSet.AsNoTracking().Where(x => x.Id.Equals(id));
-        var projected = queryable.ProjectToType<TResult>();
+        var projected = queryable.ProjectToType<TResult>(new TypeAdapterConfig()
+        {
+            
+        });
         var result = await projected.SingleOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false) ?? new TResult();
         return result;  
@@ -38,7 +41,10 @@ public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
     public async Task<IEnumerable<TResult>> GetAllAsync<TResult>(int pageNumber = 1, int pageSize = 10,
         CancellationToken cancellationToken = default) where TResult : class, new()
     {
-        var queryable = _dbSet.AsNoTracking().Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        var queryable = _dbSet.AsNoTracking()
+            .OrderBy(x => x.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize);
         var projected = queryable.ProjectToType<TResult>();
         var result = await projected.ToListAsync(cancellationToken)
             .ConfigureAwait(false);
@@ -82,9 +88,6 @@ public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
         where TResult : class, new()
     {
         entity.IsDeleted = true;
-        // _context.Entry(entity).State = EntityState.Modified;
-        // return await _context.SaveChangesAsync(cancellationToken)
-        //     .ConfigureAwait(false) > 0;
         var result = await UpdateAsync<TResult>(entity, cancellationToken).ConfigureAwait(false);
         return result != null;
     }

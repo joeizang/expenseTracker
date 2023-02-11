@@ -1,4 +1,7 @@
-﻿using ExpenseTrackerApi.Data;
+﻿using ExpenseTrackerApi.Abstractions;
+using ExpenseTrackerApi.Data;
+using ExpenseTrackerApi.EndPoints;
+using ExpenseTrackerApi.ObjectMappingConfig;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +11,10 @@ builder.Services.AddDbContext<ExpenseTrackerContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("RemotePgsql"));
 });
-
+builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericDataRepository<>));
+builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddScoped<IExpenseTypeRepository, ExpenseTypeRepository>();
+builder.Services.RegisterTypeConfiguration();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -23,31 +29,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
-
+app.MapExpenseEndpoints();
+app.MapExpenseTypeEndpoints();
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
 

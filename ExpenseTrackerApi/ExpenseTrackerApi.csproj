@@ -33,7 +33,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\DataServices" />
-    <Folder Include="Validators" />
   </ItemGroup>
 
 </Project>

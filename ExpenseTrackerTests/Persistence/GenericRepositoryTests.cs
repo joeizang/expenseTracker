@@ -45,11 +45,8 @@ public class GenericRepositoryTests
         var repository = new GenericDataRepository<Expense>(context);
 
         var expense = new Expense
-        {
-            Description = "Groceries from Sundays Shop",
-            Amount = new Money(10000, new Currency("NGN", "Naira", "₦")),
-            ExpenseDate = DateTime.Now,
-        };
+        ("Groceries from Sundays Shop",
+            new Money(10000, new Currency("NGN", "Naira", "₦")), DateTime.Now);
         expense.AddExpenseType(new ExpenseType
             {
                 Name = "Groceries",
@@ -75,11 +72,9 @@ public class GenericRepositoryTests
         var repository = new GenericDataRepository<Expense>(context);
 
         var expense = new Expense
-        {
-            Description = "AlgoExpert.io Subscription",
-            Amount = new Money(100, new Currency("USD", "Dollars", "$")),
-            ExpenseDate = DateTime.Now,
-        };
+        ("AlgoExpert.io Subscription",
+            new Money(100, new Currency("USD", "Dollars", "$")),
+            DateTime.Now);
         expense.AddExpenseType(new ExpenseType
         {
             Name = "Subscription",
@@ -141,22 +136,18 @@ public class GenericRepositoryTests
         var repository = new GenericDataRepository<Expense>(context);
 
         var expense = new Expense
-        {
-            Description = "Groceries from Sundays Shop",
-            Amount = new Money(10000, new Currency("NGN", "Naira", "₦")),
-            ExpenseDate = DateTime.Now.AddDays(-15),
-        };
+        ("Groceries from Sundays Shop", 
+            new Money(10000, new Currency("NGN", "Naira", "₦")),
+            DateTime.Now.AddDays(-15));
         expense.AddExpenseType(new ExpenseType
         {
             Name = "Groceries",
             Description = "Groceries from Sundays Shop"
         });
-        var expense1 = new Expense
-        {
-            Description = "AlgoExpert.io Subscription",
-            Amount = new Money(100, new Currency("USD", "Dollars", "$")),
-            ExpenseDate = DateTime.Now.AddMonths(-1),
-        };
+        var expense1 = new Expense("AlgoExpert.io Subscription", 
+            new Money(100, new Currency("USD", "Dollars", "$")), 
+            DateTime.Now.AddMonths(-1)
+        );
         expense1.AddExpenseType(new ExpenseType
         {
             Name = "Subscription",

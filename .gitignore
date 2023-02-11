@@ -6,3 +6,5 @@ riderModule.iml
 .idea/
 .vs/
 ExpenseTracker.sln.DotSettings.user
+.DS_Store
+.vscode/

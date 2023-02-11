@@ -6,5 +6,5 @@ public class ExpenseTypeApiModel
 
     public string Description { get; set; } = string.Empty;
 
-    public Guid ExpenseTypeId { get; set; }
+    public Guid? ExpenseTypeId { get; set; }
 }

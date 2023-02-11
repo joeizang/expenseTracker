@@ -1,5 +1,7 @@
 using ExpenseTrackerApi.Abstractions;
+using ExpenseTrackerApi.ApiModels;
 using ExpenseTrackerApi.DomainModels.ValueObjects;
+using Mapster;
 
 namespace ExpenseTrackerApi.DomainModels;
 
@@ -7,7 +9,7 @@ public class Expense : BaseDomainModel
 {
     private List<ExpenseType> _expenseTypes;
     
-    public Expense()
+    private Expense()
     {
         _expenseTypes = new List<ExpenseType>();
     }
@@ -18,18 +20,18 @@ public class Expense : BaseDomainModel
         Amount = amount;
         ExpenseDate = expenseDate;
     }
-    
-    public Expense(string description, DateTime expenseDate) : this()
+
+    public Expense(Guid id)
     {
-        Description = description;
-        ExpenseDate = expenseDate;
+        Id = id;
+        _expenseTypes = new List<ExpenseType>();
     }
+    
     public DateTime ExpenseDate { get; set; }
     
     public string Description { get; set; } = string.Empty;
-    
-    public Money Amount { get; set; } = new Money(0m, 
-        new Currency("NGN", "Nigerian Naira", "₦"));
+
+    public Money Amount { get; }
 
     public IEnumerable<ExpenseType> ExpenseTypes => _expenseTypes;
     
@@ -37,6 +39,7 @@ public class Expense : BaseDomainModel
     {
         _expenseTypes.Add(expenseType);
     }
+
     
     public void RemoveExpenseType(ExpenseType expenseType)
     {
@@ -48,7 +51,6 @@ public class Expense : BaseDomainModel
         if(Id != Guid.Empty) return false; // Expense has been saved. You can only cancel unsaved expenses.
         _expenseTypes.Clear();
         Description = string.Empty;
-        Amount = new Money(0m, new Currency("NGN", "Nigerian Naira", "₦"));
         ExpenseDate = default;
         return true;
     }
