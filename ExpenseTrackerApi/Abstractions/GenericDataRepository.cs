@@ -61,17 +61,14 @@ public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
 
     public async Task<bool> AddAsync(T entity, CancellationToken cancellationToken = default)
     {
-        using var transaction = BeginTransaction();
         try
         {
             _dbSet.Add(entity);
             await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            transaction.Commit();
             return true;
         }
         catch (Exception)
         {
-            transaction.Rollback();
             return false;
         }
     }
@@ -79,12 +76,10 @@ public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
     public async Task<TResult> UpdateAsync<TResult>(T entity, CancellationToken cancellationToken = default)
         where TResult : class, new()
     {
-        using var transaction = BeginTransaction();
         try
         {
             _dbSet.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            transaction.Commit();
         }
         catch (DbUpdateConcurrencyException ex)
         {
@@ -102,30 +97,24 @@ public class GenericDataRepository<T> : IRepository<T> where T : BaseDomainModel
                 entry.OriginalValues.SetValues(freshUpdates);
                 await entry.ReloadAsync(cancellationToken).ConfigureAwait(false);
             }
+            
+        }
 
-            transaction.Commit();
-        }
-        finally
-        {
-            transaction.Rollback();
-        }
         return entity.Adapt<TResult>();
     }
 
     public async Task<bool> DeleteAsync<TResult>(T entity, CancellationToken cancellationToken = default)
         where TResult : class, new()
     {
-        using var transaction = BeginTransaction();
+
         try
         {
             entity.IsDeleted = true;
             var result = await UpdateAsync<TResult>(entity, cancellationToken).ConfigureAwait(false);
-            transaction.Commit();
             return true;
         }
         catch (Exception)
         {
-            transaction.Rollback();
             return false;
         }
     }
