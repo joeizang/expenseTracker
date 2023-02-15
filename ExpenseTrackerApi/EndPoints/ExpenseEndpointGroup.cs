@@ -2,6 +2,7 @@ using ExpenseTrackerApi.Abstractions;
 using ExpenseTrackerApi.ApiModels;
 using ExpenseTrackerApi.DomainModels;
 using ExpenseTrackerApi.DomainModels.ValueObjects;
+using ExpenseTrackerApi.EndPoints.EndpointLogic;
 using ExpenseTrackerApi.Validators.Expense;
 using FluentValidation;
 using Mapster;
@@ -15,40 +16,12 @@ public static class ExpenseEndpointGroup
     {
         var expenseGroup = app.MapGroup("/api");
 
-        expenseGroup.MapGet("/expense", async ([FromServices] IRepository<Expense> repo) =>
-            {
-                try
-                {
-                    var expenses = await repo.GetAllAsync<ExpenseApiModel>().ConfigureAwait(false);
-                    return Results.Ok(expenses);
-                }
-                catch (Exception e)
-                {
-                    return Results.Problem("There was a problem. But its not your fault", statusCode: 500);
-                }
-            }).Produces(StatusCodes.Status200OK, typeof(IEnumerable<ExpenseApiModel>))
+        expenseGroup.MapGet("/expense", ExpenseEndpointLogic.GetExpenses)
+            .Produces(StatusCodes.Status200OK, typeof(IEnumerable<ExpenseApiModel>))
             .Produces(StatusCodes.Status500InternalServerError, typeof(object));
 
-        expenseGroup.MapGet("/expense/{id:guid}",
-                async (Guid id, [FromServices] IExpenseRepository repo) =>
-                {
-                    try
-                    {
-                        var expense = await repo.GetAsync<ExpenseApiModel>(id).ConfigureAwait(false);
-                        return expense is null
-                            ? Results
-                                .BadRequest(
-                                    new
-                                    {
-                                        Error = "There seems to be a problem with the id submitted"
-                                    })
-                            : Results.Ok(expense);
-                    }
-                    catch (Exception e)
-                    {
-                        return Results.Problem("There was a problem retrieving the expense", statusCode: 500);
-                    }
-                }).AddEndpointFilter(async (context, next) =>
+        expenseGroup.MapGet("/expense/{id:guid}", ExpenseEndpointLogic.GetExpenseById)
+            .AddEndpointFilter(async (context, next) =>
             {
                 var id = context.HttpContext.Request.RouteValues["id"] as Guid? ?? Guid.Empty;
                 if (id == Guid.Empty)
@@ -58,26 +31,8 @@ public static class ExpenseEndpointGroup
             .Produces(StatusCodes.Status400BadRequest, typeof(object))
             .Produces(StatusCodes.Status500InternalServerError, typeof(object));
 
-        expenseGroup.MapGet("/expense/{date:datetime}",
-                async (DateTime date, [FromServices] IExpenseRepository repo) =>
-                {
-                    try
-                    {
-                        var expenses = await repo.GetByDateAsync<ExpenseApiModel>(date)
-                            .ConfigureAwait(false);
-                        return !expenses.Any()
-                            ? Results.BadRequest(
-                                new
-                                {
-                                    Error = "There seems to be a problem with the date submitted"
-                                })
-                            : Results.Ok(expenses);
-                    }
-                    catch (Exception e)
-                    {
-                        return Results.Problem("There was a problem but its not your fault!", statusCode: 500);
-                    }
-                }).AddEndpointFilter(async (context, next) =>
+        expenseGroup.MapGet("/expense/{date:datetime}", ExpenseEndpointLogic.GetExpenseByDate)
+            .AddEndpointFilter(async (context, next) =>
             {
                 var date = context.HttpContext.Request.RouteValues["date"] as DateTime? ?? DateTime.MinValue;
                 if (date == DateTime.MinValue)
@@ -87,20 +42,8 @@ public static class ExpenseEndpointGroup
             .Produces(StatusCodes.Status400BadRequest, typeof(object))
             .Produces(StatusCodes.Status500InternalServerError, typeof(object));
 
-        expenseGroup.MapGet("/expense/{description:alpha}",
-                async (string description, [FromServices] IExpenseRepository repo) =>
-                {
-                    try
-                    {
-                        var expenses = await repo.GetManyByDescriptionAsync(description)
-                            .ConfigureAwait(false);
-                        return Results.Ok(expenses);
-                    }
-                    catch (Exception e)
-                    {
-                        return Results.Problem("There was a problem but its not your fault!", statusCode: 500);
-                    }
-                }).AddEndpointFilter(async (context, next) =>
+        expenseGroup.MapGet("/expense/{description:alpha}", ExpenseEndpointLogic.GetExpenseByDescription)
+            .AddEndpointFilter(async (context, next) =>
             {
                 var description = context.HttpContext.Request.RouteValues["description"] as string;
                 if (string.IsNullOrWhiteSpace(description))
@@ -110,20 +53,8 @@ public static class ExpenseEndpointGroup
             .Produces(StatusCodes.Status400BadRequest, typeof(object))
             .Produces(StatusCodes.Status500InternalServerError, typeof(object));
 
-        expenseGroup.MapGet("/expense/dates",
-                async ([AsParameters] GetExpenseByDateModel dates, [FromServices] IExpenseRepository repo) =>
-                {
-                    try
-                    {
-                        var expenses = await repo.GetManyByDateAsync(dates)
-                            .ConfigureAwait(false);
-                        return Results.Ok(expenses);
-                    }
-                    catch (Exception e)
-                    {
-                        return Results.Problem("There was a problem but its not your fault!", statusCode: 500);
-                    }
-                }).AddEndpointFilter(async (context, next) =>
+        expenseGroup.MapGet("/expense/dates", ExpenseEndpointLogic.GetExpenseByDates)
+            .AddEndpointFilter(async (context, next) =>
             {
                 var validator = new GetExpenseByDateValidator();
                 var model = context.GetArgument<GetExpenseByDateModel>(0);
@@ -141,34 +72,8 @@ public static class ExpenseEndpointGroup
             .Produces(StatusCodes.Status400BadRequest, typeof(object))
             .Produces(StatusCodes.Status500InternalServerError, typeof(object));
 
-        expenseGroup.MapPost("/expense",
-                async ([FromBody] AddExpenseModel model, [FromServices] IExpenseRepository repo) =>
-                {
-                    try
-                    {
-                        var expenseTypes = model.ExpenseTypes.Adapt<List<ExpenseType>>();
-                        var currency = model.Currency switch
-                        {
-                            "USD" => new Currency("USD", "US Dollar", "$"),
-                            "EUR" => new Currency("EUR", "Euro", "€"),
-                            "GBP" => new Currency("GBP", "British Pound", "£"),
-                            _ => new Currency("NGN", "Nigerian Naira", "₦")
-                        };
-                        var entity = new Expense(model.Description, new Money(model.Amount, currency),
-                            model.ExpenseDate);
-                        foreach (var expenseType in expenseTypes)
-                        {
-                            entity.AddExpenseType(expenseType);
-                        }
-
-                        await repo.AddAsync(entity).ConfigureAwait(false);
-                        return Results.Ok();
-                    }
-                    catch (Exception e)
-                    {
-                        return Results.Problem("There was a problem but its not your fault!", statusCode: 500);
-                    }
-                }).AddEndpointFilter(async (context, next) =>
+        expenseGroup.MapPost("/expense", ExpenseEndpointLogic.AddExpense)
+            .AddEndpointFilter(async (context, next) =>
             {
                 var validator = new AddExpenseValidator();
                 var target = context.GetArgument<AddExpenseModel>(0);
@@ -189,20 +94,8 @@ public static class ExpenseEndpointGroup
             .Produces(StatusCodes.Status400BadRequest, typeof(object))
             .Produces(StatusCodes.Status500InternalServerError, typeof(object));
 
-        expenseGroup.MapPut("/expense",
-            async (UpdateExpenseModel model, Guid id, [FromServices] IExpenseRepository repo) =>
-            {
-                try
-                {
-                    var expense = model.Adapt<Expense>();
-                    var updated = await repo.UpdateAsync<ExpenseApiModel>(expense).ConfigureAwait(false);
-                    return Results.Ok(updated);
-                }
-                catch (Exception e)
-                {
-                    return Results.Problem("There was a problem but its not your fault!", statusCode: 500);
-                }
-            }).AddEndpointFilter(async (context, next) =>
+        expenseGroup.MapPut("/expense", ExpenseEndpointLogic.UpdateExpense)
+            .AddEndpointFilter(async (context, next) =>
             {
                 var target = context.GetArgument<UpdateExpenseModel>(0);
 
@@ -223,19 +116,8 @@ public static class ExpenseEndpointGroup
             .Produces(StatusCodes.Status400BadRequest, typeof(object))
             .Produces(StatusCodes.Status500InternalServerError, typeof(object));
         
-        expenseGroup.MapDelete("/expense/{id:guid}", async (Guid id, IExpenseRepository repo) =>
-        {
-            try
-            {
-                var found = await repo.GetAsync<ExpenseApiModel>(id).ConfigureAwait(false);
-                await repo.DeleteAsync<ExpenseApiModel>(new Expense(id)).ConfigureAwait(false);
-                return Results.Ok();
-            }
-            catch (Exception e)
-            {
-                return Results.Problem("There was a problem but its not your fault!", statusCode: 500);
-            }
-        }).AddEndpointFilter(async (context, next) =>
+        expenseGroup.MapDelete("/expense/{id:guid}", ExpenseEndpointLogic.DeleteExpense)
+            .AddEndpointFilter(async (context, next) =>
             {
                 var id = context.GetArgument<Guid>(0);
                 if(id == Guid.Empty)
