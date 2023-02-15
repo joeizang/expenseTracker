@@ -36,4 +36,12 @@ public class ExpenseRepository : GenericDataRepository<Expense>, IExpenseReposit
         var result = await projected.ToListAsync(cancellationToken).ConfigureAwait(false);
         return result;
     }
+
+    public async Task<Expense> GetExpenseByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var queryable = _context.Expenses.AsNoTracking().Where(x => x.Id.Equals(id));
+        var result = await queryable.SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        if (result != null) return result;
+        throw new Exception("Expense not found");
+    }
 }

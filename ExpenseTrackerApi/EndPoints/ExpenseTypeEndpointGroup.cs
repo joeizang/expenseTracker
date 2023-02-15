@@ -18,7 +18,8 @@ public static class ExpenseTypeEndpointGroup
             return Results.Ok(result);
         }).Produces(StatusCodes.Status200OK, typeof(IEnumerable<ExpenseTypeApiModel>));
 
-        endpoints.MapGet("/expense-types/{id:guid}", async (Guid id, [FromServices]IExpenseTypeRepository repo) =>
+        endpoints.MapGet("/expense-types/{id:guid}", 
+                async (Guid id, [FromServices]IExpenseTypeRepository repo) =>
             {
                 try
                 {
